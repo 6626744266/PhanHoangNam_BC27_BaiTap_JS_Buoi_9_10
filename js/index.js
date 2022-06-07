@@ -515,10 +515,6 @@ document.getElementById('searchName').addEventListener('keypress', searchEmploye
 
 document.getElementById('btnTimNV').addEventListener("click", searchEmployee)
 function searchEmployee(event) {
-  console.log(event)
-  console.log(typeof event.type)
-  console.log(event.type)
-  console.log(event.key)
   if (event.type === "keypress") {
     if (event.key !== "Enter") {
       return;
@@ -553,7 +549,7 @@ function searchEmployee(event) {
     display(newEmployees);
   }
 
- 
+
 }
 
 
