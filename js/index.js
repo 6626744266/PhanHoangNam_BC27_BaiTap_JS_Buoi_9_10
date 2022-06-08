@@ -148,7 +148,8 @@ function resetForm() {
   document.getElementById("luongCB").value = ""
   document.getElementById("chucvu").value = "Chọn chức vụ"
   document.getElementById("gioLam").value = ""
-  document.getElementById("btnThemNV").disabled = false
+  document.getElementById("btnThemNV").disabled = false;
+  document.getElementById("tknv").disabled = false;
 
 }
 
@@ -184,16 +185,16 @@ function validationUpdate() {
   var luongCB = +document.getElementById("luongCB").value;
   var chucVu = document.getElementById("chucvu").value;
   var gioLam = +document.getElementById("gioLam").value;
-  var valid = true;
+  var isValid = true;
 
   var namePattern = new RegExp("^[a-z0-9A-Z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ ]+$")
   if (!isRequired(name)) {
-    valid = false;
+    isValid = false;
     document.getElementById('tbTen').innerHTML = "Tên nhân viên không được để trống";
     document.getElementById('tbTen').style = "display:block";
   }
   else if (!namePattern.test(name)) {
-    valid = false;
+    isValid = false;
     document.getElementById('tbTen').innerHTML = "Tên nhân viên chứa kí tự không hợp lệ";
     document.getElementById('tbTen').style = "display:block";
   }
@@ -205,13 +206,13 @@ function validationUpdate() {
   //Kiểm tra email có hợp lệ không 
   var emailPattern = new RegExp("[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,}$");
   if (!isRequired(email)) {
-    valid = false;
+    isValid = false;
     document.getElementById("tbEmail").innerHTML =
       "Email không được để trống";
     document.getElementById('tbEmail').style = "display:block";
 
   } else if (!emailPattern.test(email)) {
-    valid = false;
+    isValid = false;
     document.getElementById("tbEmail").innerHTML =
       "Email không đúng định dạng";
     document.getElementById('tbEmail').style = "display:block";
@@ -226,24 +227,24 @@ function validationUpdate() {
   //Kiểm tra password có hợp lệ không 
   var pswPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,10}$/
   if (!isRequired(password)) {
-    valid = false;
+    isValid = false;
     document.getElementById("tbMatKhau").innerHTML =
       "Password không được để trống";
     document.getElementById('tbMatKhau').style = "display:block";
 
   }
   else if (!minLength(password, 6)) {
-    valid = false;
+    isValid = false;
     document.getElementById('tbMatKhau').innerHTML = "Password phải có ít nhất 6 ký tự";
     document.getElementById('tbMatKhau').style = "display:block";
   }
   else if (!maxLength(password, 10)) {
-    valid = false;
+    isValid = false;
     document.getElementById('tbMatKhau').innerHTML = "Password có tối đa 10 ký tự";
     document.getElementById('tbMatKhau').style = "display:block";
   }
   else if (!pswPattern.test(password)) {
-    valid = false;
+    isValid = false;
     document.getElementById("tbMatKhau").innerHTML =
       "Password phải chứa ít nhất 1 số, 1 ký tự in hoa, 1 ký tự đặc biệt";
     document.getElementById('tbMatKhau').style = "display:block";
@@ -257,7 +258,7 @@ function validationUpdate() {
   //Kiểm tra ngày làm có hợp lệ không 
 
   if (!isRequired(datepicker)) {
-    valid = false;
+    isValid = false;
     document.getElementById("tbNgay").innerHTML =
       "Ngày làm không được để trống";
     document.getElementById('tbNgay').style = "display:block";
@@ -270,20 +271,21 @@ function validationUpdate() {
 
   //Kiểm tra lương cơ bản có hợp lệ không 
 
-
-  if (!isRequired(luongCB)) {
-    valid = false;
+  if (!isRequired(`'${luongCB}'`)) {
+    console.log(typeof luongCB)
+    isValid = false;
     document.getElementById("tbLuongCB").innerHTML =
       "Tiền lương không được để trống";
     document.getElementById('tbLuongCB').style = "display:block";
 
   } else if (luongCB < 1e+6 || luongCB > 20e+6) {
-    valid = false;
+    isValid = false;
     document.getElementById("tbLuongCB").innerHTML =
       "Tiền lương phải từ 1 000 000 - 20 000 000 ";
     document.getElementById('tbLuongCB').style = "display:block";
 
   }
+
   else {
     document.getElementById('tbLuongCB').innerHTML = "";
     document.getElementById('tbLuongCB').style = "display:none";
@@ -291,7 +293,7 @@ function validationUpdate() {
   }
   //Kiểm tra chức vụ có hợp lệ không 
   if (chucVu === "Chọn chức vụ") {
-    valid = false;
+    isValid = false;
     document.getElementById('tbChucVu').innerHTML = "Chọn chức vụ hợp lệ (Sếp, Trưởng phòng, Nhân viên";
     document.getElementById('tbChucVu').style = "display:block";
   }
@@ -302,13 +304,13 @@ function validationUpdate() {
   }
   //Kiểm tra số giờ làm có hợp lệ không 
   if (!isRequired(gioLam)) {
-    valid = false;
+    isValid = false;
     document.getElementById("tbGiolam").innerHTML =
       "Số giờ làm không được để trống";
     document.getElementById('tbGiolam').style = "display:block";
 
   } else if (gioLam < 80 || gioLam > 200) {
-    valid = false;
+    isValid = false;
     document.getElementById("tbGiolam").innerHTML =
       "Số giờ làm trong tháng phải từ 80 - 200 giờ";
     document.getElementById('tbGiolam').style = "display:block";
@@ -320,7 +322,7 @@ function validationUpdate() {
 
   }
 
-  return valid;
+  return isValid;
 
 }
 function validationAdd() {
@@ -333,32 +335,32 @@ function validationAdd() {
   var chucVu = document.getElementById("chucvu").value;
   var gioLam = +document.getElementById("gioLam").value;
 
-  var valid = true;
+  var isValid = true;
 
   //Kiểm tra tài khoản nhập vào có hợp lệ hay không
   var idPattern = new RegExp("^[1-9]+$");
   if (!isRequired(tk)) {
-    valid = false;
+    isValid = false;
     document.getElementById('tbTKNV').innerHTML = "Tài khoản không được để trống";
     document.getElementById('tbTKNV').style = "display:block";
   }
   else if (!minLength(tk, 4)) {
-    valid = false;
+    isValid = false;
     document.getElementById('tbTKNV').innerHTML = "Tài khoản phải có ít nhất 4 ký số";
     document.getElementById('tbTKNV').style = "display:block";
   }
   else if (!maxLength(tk, 6)) {
-    valid = false;
+    isValid = false;
     document.getElementById('tbTKNV').innerHTML = "Tài khoản có tối đa 6 ký số";
     document.getElementById('tbTKNV').style = "display:block";
   }
   else if (!idPattern.test(tk)) {
-    valid = false;
+    isValid = false;
     document.getElementById('tbTKNV').innerHTML = "Tài khoản chỉ bao gồm số";
     document.getElementById('tbTKNV').style = "display:block";
   }
   else if (!duplicateTest(tk)) {
-    valid = false;
+    isValid = false;
     document.getElementById('tbTKNV').innerHTML = "Tài khoản đã tồn tại";
     document.getElementById('tbTKNV').style = "display:block";
   }
@@ -372,12 +374,12 @@ function validationAdd() {
   //Kiểm tra tên nhân viên nhập vào có hợp lệ hay không 
   var namePattern = new RegExp("^[a-z0-9A-Z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễếệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ ]+$")
   if (!isRequired(name)) {
-    valid = false;
+    isValid = false;
     document.getElementById('tbTen').innerHTML = "Tên nhân viên không được để trống";
     document.getElementById('tbTen').style = "display:block";
   }
   else if (!namePattern.test(name)) {
-    valid = false;
+    isValid = false;
     document.getElementById('tbTen').innerHTML = "Tên nhân viên chứa kí tự không hợp lệ";
     document.getElementById('tbTen').style = "display:block";
   }
@@ -390,13 +392,13 @@ function validationAdd() {
   //Kiểm tra email có hợp lệ không 
   var emailPattern = new RegExp("[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,}$");
   if (!isRequired(email)) {
-    valid = false;
+    isValid = false;
     document.getElementById("tbEmail").innerHTML =
       "Email không được để trống";
     document.getElementById('tbEmail').style = "display:block";
 
   } else if (!emailPattern.test(email)) {
-    valid = false;
+    isValid = false;
     document.getElementById("tbEmail").innerHTML =
       "Email không đúng định dạng";
     document.getElementById('tbEmail').style = "display:block";
@@ -410,24 +412,24 @@ function validationAdd() {
   //Kiểm tra password có hợp lệ không 
   var pswPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,10}$/
   if (!isRequired(password)) {
-    valid = false;
+    isValid = false;
     document.getElementById("tbMatKhau").innerHTML =
       "Password không được để trống";
     document.getElementById('tbMatKhau').style = "display:block";
 
   }
   else if (!minLength(password, 6)) {
-    valid = false;
+    isValid = false;
     document.getElementById('tbMatKhau').innerHTML = "Password phải có ít nhất 6 ký tự";
     document.getElementById('tbMatKhau').style = "display:block";
   }
   else if (!maxLength(password, 10)) {
-    valid = false;
+    isValid = false;
     document.getElementById('tbMatKhau').innerHTML = "Password có tối đa 10 ký tự";
     document.getElementById('tbMatKhau').style = "display:block";
   }
   else if (!pswPattern.test(password)) {
-    valid = false;
+    isValid = false;
     document.getElementById("tbMatKhau").innerHTML =
       "Password phải chứa ít nhất 1 số, 1 ký tự in hoa, 1 ký tự đặc biệt";
     document.getElementById('tbMatKhau').style = "display:block";
@@ -441,7 +443,7 @@ function validationAdd() {
   //Kiểm tra ngày làm có hợp lệ không 
 
   if (!isRequired(datepicker)) {
-    valid = false;
+    isValid = false;
     document.getElementById("tbNgay").innerHTML =
       "Ngày làm không được để trống";
     document.getElementById('tbNgay').style = "display:block";
@@ -456,13 +458,13 @@ function validationAdd() {
 
 
   if (!isRequired(luongCB)) {
-    valid = false;
+    isValid = false;
     document.getElementById("tbLuongCB").innerHTML =
       "Tiền lương không được để trống";
     document.getElementById('tbLuongCB').style = "display:block";
 
   } else if (luongCB < 1e+6 || luongCB > 20e+6) {
-    valid = false;
+    isValid = false;
     document.getElementById("tbLuongCB").innerHTML =
       "Tiền lương phải từ 1 000 000 - 20 000 000 ";
     document.getElementById('tbLuongCB').style = "display:block";
@@ -475,7 +477,7 @@ function validationAdd() {
   }
   //Kiểm tra chức vụ có hợp lệ không 
   if (chucVu === "Chọn chức vụ") {
-    valid = false;
+    isValid = false;
     document.getElementById('tbChucVu').innerHTML = "Chọn chức vụ hợp lệ (Sếp, Trưởng phòng, Nhân viên";
     document.getElementById('tbChucVu').style = "display:block";
   }
@@ -486,13 +488,13 @@ function validationAdd() {
   }
   //Kiểm tra số giờ làm có hợp lệ không 
   if (!isRequired(gioLam)) {
-    valid = false;
+    isValid = false;
     document.getElementById("tbGiolam").innerHTML =
       "Số giờ làm không được để trống";
     document.getElementById('tbGiolam').style = "display:block";
 
   } else if (gioLam < 80 || gioLam > 200) {
-    valid = false;
+    isValid = false;
     document.getElementById("tbGiolam").innerHTML =
       "Số giờ làm trong tháng phải từ 80 - 200 giờ";
     document.getElementById('tbGiolam').style = "display:block";
@@ -507,51 +509,54 @@ function validationAdd() {
 
 
 
-  return valid;
+  return isValid;
 
 
 }
 document.getElementById('searchName').addEventListener('keypress', searchEmployee)
 
 document.getElementById('btnTimNV').addEventListener("click", searchEmployee)
+
+function subSearchEmployee() {
+  var employeeSearch = document.getElementById("searchName").value;
+  employeeSearch = employeeSearch.toLowerCase();
+
+  var newEmployees = [];
+  for (var i = 0; i < employees.length; i++) {
+    var employee = employees[i];
+    employeeRank = employee.loaiNV.toLowerCase()
+    if (employeeRank.indexOf(employeeSearch) !== -1) {
+      newEmployees.push(employee)
+    }
+  }
+  display(newEmployees);
+}
 function searchEmployee(event) {
+
   if (event.type === "keypress") {
     if (event.key !== "Enter") {
       return;
     }
     else {
-      var employeeSearch = document.getElementById("searchName").value;
-      employeeSearch = employeeSearch.toLowerCase();
-
-      var newEmployees = [];
-      for (var i = 0; i < employees.length; i++) {
-        var employee = employees[i];
-        employeeRank = employee.loaiNV.toLowerCase()
-        if (employeeRank.indexOf(employeeSearch) !== -1) {
-          newEmployees.push(employee)
-        }
-      }
-      display(newEmployees);
+      subSearchEmployee()
     }
   }
-  if (event.type === "click") {
-    var employeeSearch = document.getElementById("searchName").value;
-    employeeSearch = employeeSearch.toLowerCase();
-
-    var newEmployees = [];
-    for (var i = 0; i < employees.length; i++) {
-      var employee = employees[i];
-      employeeRank = employee.loaiNV.toLowerCase()
-      if (employeeRank.indexOf(employeeSearch) !== -1) {
-        newEmployees.push(employee)
-      }
-    }
-    display(newEmployees);
+  else if (event.type === "click") {
+    subSearchEmployee()
   }
 
 
 }
+document.getElementById('searchName').addEventListener('keyup', resetSearchEmployee)
 
+function resetSearchEmployee() {
+  var employeeSearch = document.getElementById("searchName").value;
+  employeeSearch = employeeSearch.toLowerCase();
+  if (employeeSearch === "") {
+    display(employees);
+  }
+
+}
 
 
 function isRequired(value) {
